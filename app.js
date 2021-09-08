@@ -20,7 +20,16 @@ function animateSlides() {
     slideTl.fromTo(img, { scale: 2}, { scale: 1}, "-=1");
     slideTl.fromTo(revealText, {x: "0%"}, {x: "100%"}, "-=0.75");
     slideTl.fromTo(nav,{ y:"-100%"}, { y:"0%"}, "-=0.5" );
-    });
+    //Create Scene
+    slideScene = new ScrollMagic.Scene({
+        triggerElement: slide,
+        triggerHook: 0.25,
+        reverse: false,
+    })
+    .setTween(slideTl)
+    .addIndicators({colorStart:"white", colorTrigger:'white', name: "slide" })
+    .addTo(controller);
+  });
 }
 
 animateSlides();
