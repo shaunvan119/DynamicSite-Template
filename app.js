@@ -1,5 +1,6 @@
 let controller;
 let slideScene;
+let pageScene;
 
 function animateSlides() {
     //Init controller
@@ -8,7 +9,7 @@ function animateSlides() {
     const sliders = document.querySelectorAll(".slide");
     const nav = document.querySelector(".nav-header");
     //Loop over each slide
-    sliders.forEach(slide => {
+    sliders.forEach((slide, index, slides) => {
     const revealImg = slide.querySelector(".reveal-img");
     const img = slide.querySelector("img");
     const revealText = slide.querySelector(".reveal-text");
@@ -27,8 +28,30 @@ function animateSlides() {
         reverse: false,
     })
     .setTween(slideTl)
-    .addIndicators({colorStart:"white", colorTrigger:'white', name: "slide" })
+    .addIndicators({
+        colorStart: "white", 
+        colorTrigger: "white", 
+        name: "slide"
+    })
     .addTo(controller);
+    //new animation
+    const pageTl = gsap.timeline();
+    pageTl.fromTo(slide, {opacity: 1, scale: 1}, {opacity: 0, scale: 0.5})
+    //create new sceane
+    pageScene = new ScrollMagic.Scene({
+        triggerElement: slide,
+        duration: "100%",
+        triggerHook: 0
+    })
+    .addIndicators({
+        colorStart: "white", 
+        colorTrigger: "white", 
+        name: "page",
+        indent: 200
+    })
+    .setPin(slide)
+    .setTween(pageTl)
+    .addTo(controller)
   });
 }
 
