@@ -58,8 +58,9 @@ function animateSlides() {
   });
 }
 
-let mouse = document.querySelector(".cursor");
-let mouseTxt = mouse.querySelector("span");
+const mouse = document.querySelector(".cursor");
+const mouseTxt = mouse.querySelector("span");
+const burger = document.querySelector(".burger");
 function cursor(e) {
     
     mouse.style.top = e.pageY + "px";
@@ -82,8 +83,16 @@ function activeCursor(e){
         mouseTxt.innerText = "";
         gsap.to(".title-swipe",1, { y: "100%" });
     }
+    
 }
 
+function navToggle(e) {
+    gsap.to(".line1", 0.5, { rotate: "45", y: 5, background: "black" });
+    gsap.to(".line2", 0.5, { rotate: "-45", y: -5, background: "black" });
+    gsap.to(".nav-bar", 1, { clipPath: "circle(2500px at 100% -10%)" });
+}
+//Event Listener
+burger.addEventListener("click", navToggle);
 window.addEventListener("mousemove", cursor);
 window.addEventListener("mouseover", activeCursor);
 
