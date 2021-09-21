@@ -126,11 +126,17 @@ barba.init({
     transitions:[
         {
          leave({current,next}){
+            let done = this.async(); 
 //An Animation
         const tl = gsap.timeline({defaults:{ease:"power2.inOut"}});
+        tl.fromTo(current.container, 1, { opacity: 1}, { opacity: 0, onComplete: done });
 
          },
-         enter({current,next}){
+         enter({current,next}) {
+            let done = this.async();
+//An Animation
+const tl = gsap.timeline({defaults:{ease:"power2.inOut"}});
+tl.fromTo(next.container, 1, { opacity: 0}, { opacity: 1, onComplete: done});
     
 
          }
