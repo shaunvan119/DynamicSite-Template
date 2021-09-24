@@ -1,6 +1,7 @@
 let controller;
 let slideScene;
 let pageScene;
+let detailScene;
 
 function animateSlides() {
     //Init controller
@@ -54,7 +55,12 @@ function animateSlides() {
     })
     .setPin(slide, { pushFollowers: false })
     .setTween(pageTl)
-    .addTo(controller)
+    .addIndicators({
+        colorStart: "white", 
+        colorTrigger: "white", 
+        name: "slide"
+    })
+    .addTo(controller);
   });
 }
 
@@ -105,12 +111,15 @@ function navToggle(e) {
 }
 
 //barba page Transistions
+const logo = document.querySelector("#logo");
 barba.init({
     views: [
         {
          namespace: "home",
          beforeEnter() {
             animateSlides();
+            logo.href ="./index.html"
+
          },
          beforeLeave(){
              slideScene.destroy();
@@ -120,7 +129,11 @@ barba.init({
          }
         },
         {
-         namespace: "fashion"
+         namespace: "fashion",
+         beforeEnter(){
+             logo.href = "../index.html";
+             gsap.fromTo(".nav-header", {y: "100%" }, { y: "0%",ease:"power2.inOut"});
+         }
         }
     ],
     transitions:[
@@ -129,23 +142,60 @@ barba.init({
             let done = this.async(); 
 //An Animation
         const tl = gsap.timeline({defaults:{ease:"power2.inOut"}});
-        tl.fromTo(current.container, 1, { opacity: 1}, { opacity: 0, onComplete: done });
+        tl.fromTo(current.container, 1, 
+            { opacity: 1}, 
+            { opacity: 0}
+            );
 
-         },
+        tl.fromTo(
+            ".swipe", 
+             0.75, 
+             {x: "-100%"}, 
+             {x: "0%", onComplete: done}, 
+             "-=0.5"
+        );
+    },
          enter({current,next}) {
             let done = this.async();
+//Scroll to the top 
+window.scrollTo(0, 0);
 //An Animation
 const tl = gsap.timeline({defaults:{ease:"power2.inOut"}});
-tl.fromTo(next.container, 1, { opacity: 0}, { opacity: 1, onComplete: done});
+tl.fromTo(
+    ".swipe", 
+     1, 
+     {x: "0%"}, 
+     {x: "100%", stagger: 0.25, onComplete: done}, 
+     
+);
+tl.fromTo(next.container, 1, 
+    { opacity: 0}, 
+    { opacity: 1} 
+    );
     
-
          }
 
     }
 ]
 });
-
-
+function detailAnimation(){
+    controller = new ScrollMagic.controller();
+    const slides = document.querySelectorAll(".detail-slide");
+    slides.forEach((slide,index,slides) =>{
+    const slideTl = gsap.timeline({defaults: {duration:1}})
+    let nextSlide = slides.length -1 === index ? 'end' : slides[index + 1];
+    const nextImg = nextSlide.querySelector("img");
+    slideTl.fromTo(slide, { opacity:1 }, { opacity:0 } )
+    //Scene 
+    detailScene = new ScrollMagic.Scene({
+        trigger: slide,
+        duration: "100%",
+        triggerHook: 0
+      }).setPin(slide, {pushFollowers:false })
+      .setTween(slideTl)
+      .addTo(controller);
+   });
+}
 //Event Listener
 burger.addEventListener("click", navToggle);
 window.addEventListener("mousemove", cursor);
